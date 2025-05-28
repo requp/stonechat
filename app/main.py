@@ -5,7 +5,7 @@ from fastapi import FastAPI, APIRouter
 
 from app.auth.router import v1_auth_router
 from app.chat.router import v1_chat_router
-
+from app.core.config import settings
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,4 +27,4 @@ app.include_router(api_v1_router)
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8888)
+    uvicorn.run(app, host=settings.UVICORN_HOST, port=settings.UVICORN_PORT)
