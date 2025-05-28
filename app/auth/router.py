@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from uuid import UUID, uuid4
 
 from asyncpg.pgproto.pgproto import timedelta
 from fastapi import (
@@ -11,7 +10,7 @@ from fastapi import (
 from jose import jwt, JWTError
 
 from app.auth.schemas import TokenUserData
-from app.config import settings
+from app.core.config import settings
 
 # Логгер для модуля
 logger = logging.getLogger(__name__)
