@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str
     PROD_HOST: str
     PROD_PORT: int
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    PROD_HOST: str
+    PROD_PORT: int
 
     @property
     def DATABASE_URL_async(self) -> str:
@@ -47,7 +51,7 @@ class Settings(BaseSettings):
 
 
     model_config = SettingsConfigDict(
-        env_file=f"{pathlib.Path(__file__).resolve().parent.parent.parent}/.env",
+        env_file=f"{pathlib.Path(__file__).resolve().parent.parent}/.env",
         extra="allow"
     )
 
