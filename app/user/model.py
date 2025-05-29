@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import String, Boolean, BigInteger
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.mixins.model_mixins.id_mixins import IDMixin
@@ -21,8 +21,8 @@ class User(IDMixin, TimestampsMixin, Base):
     username: Mapped[str] = mapped_column(
         String(20), nullable=False, unique=True, index=True
     )
-    google_id: Mapped[int] = mapped_column(
-        BigInteger, nullable=False, unique=True, index=True
+    google_id: Mapped[str] = mapped_column(
+        String(64), nullable=False, unique=True, index=True
     )
     fullname: Mapped[str | None] = mapped_column(String(200), default=None)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
