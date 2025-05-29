@@ -18,6 +18,10 @@ class Settings(BaseSettings):
             ALGORITHM (str): The algorithm used for JWT encoding and decoding.
             UVICORN_PORT (int): The port number on which the Uvicorn server runs.
             UVICORN_HOST (str): The host address for the Uvicorn server.
+            GOOGLE_CLIENT_ID (str): The client ID for Google OAuth authentication.
+            GOOGLE_CLIENT_SECRET (str): The client secret for Google OAuth authentication.
+            PROD_HOST (str): The host address for the production server.
+            PROD_PORT (int): The port number for the production server
     """
 
     MODE: str
@@ -28,10 +32,6 @@ class Settings(BaseSettings):
     ALGORITHM: str
     UVICORN_PORT: int
     UVICORN_HOST: str
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
-    PROD_HOST: str
-    PROD_PORT: int
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     PROD_HOST: str
