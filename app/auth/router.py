@@ -1,17 +1,19 @@
 import logging
 from datetime import datetime
-from uuid import UUID, uuid4
 
 from asyncpg.pgproto.pgproto import timedelta
+from authlib.integrations.base_client import OAuthError
 from fastapi import (
     HTTPException,
     status,
-    APIRouter
+    APIRouter,
+    Request
 )
+from fastapi.params import Depends
 from jose import jwt, JWTError
 
 from app.auth.schemas import TokenUserData
-from app.config import settings
+from app.core.config import settings, oauth
 
 # Логгер для модуля
 logger = logging.getLogger(__name__)
@@ -83,3 +85,37 @@ async def create_token(
     return {
         "access_token": token
     }
+
+
+
+@v1_auth_router.get(path="/google/callback")
+async def auth_google(
+        request: Request
+):
+    try:
+        token = await oauth.google.authorize_access_token(request)
+        user = token.get("userinfo")
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+            )
+        if user.get("iss") not in ["https://accounts.google.com", "accounts.google.com"]:
+            logger.error(f"wrong iss {user.get("iss")}")
+            raise HTTPException(
+                status_code=401,
+                detail="Google authentication failed."
+            )
+
+
+    except OAuthError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
+    except Exception as e:
+        logger.error(f"Google authentication failed: {type(e).__name__}: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=401,
+            detail="Google authentication failed."
+        )

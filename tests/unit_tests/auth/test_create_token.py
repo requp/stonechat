@@ -1,13 +1,8 @@
-from datetime import datetime, timedelta
-
-from fastapi import status
 import pytest
 from jose import jwt
 
-from app.auth.router import get_current_user, create_token
-from app.auth.schemas import TokenUserData
-from app.config import settings
-from tests.unit_tests.auth.conftest import user_1_data
+from app.auth.router import create_token
+from app.core.config import settings
 
 
 class TestCreateToken:
