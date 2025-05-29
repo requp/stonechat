@@ -1,16 +1,27 @@
 import logging
 from datetime import datetime
+from typing import Annotated
 
 from asyncpg.pgproto.pgproto import timedelta
 from fastapi import (
     HTTPException,
     status,
-    APIRouter
+    APIRouter,
+    Depends
 )
 from jose import jwt, JWTError
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import RedirectResponse
 
-from app.auth.schemas import TokenUserData
+from app.auth.schemas import TokenUserData, GoogleUserData
 from app.core.config import settings
+from app.main import app
+from app.mixins.db_mixin import get_db
+from app.user.model import User
+from app.user.schema import CreateUser
+from app.user.service import UserManager, _user_data_from_google_user_data, _does_google_user_already_exist, \
+    _get_user_or_none
 
 # Логгер для модуля
 logger = logging.getLogger(__name__)
@@ -82,3 +93,17 @@ async def create_token(
     return {
         "access_token": token
     }
+
+
+async def authenticate_user(
+        db: Annotated[AsyncSession, Depends(get_db)],
+        google_user_data: GoogleUserData
+):
+    user: User | None = await _get_user_or_none(
+        db=db, email=google_user_data.email, google_id=google_user_data.id
+    )
+    if not user:
+        user = await UserManager.create_user(
+            db=db, google_user_data=google_user_data
+        )
+    return user
