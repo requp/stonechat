@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import Annotated
 
 from asyncpg.pgproto.pgproto import timedelta
 from authlib.integrations.base_client import OAuthError
@@ -10,10 +11,13 @@ from fastapi import (
     Request
 )
 from fastapi.params import Depends
+from httpx import AsyncClient
 from jose import jwt, JWTError
 
 from app.auth.schemas import TokenUserData
+from app.auth.service import _get_user_info_from_google_token
 from app.core.config import settings, oauth
+from app.depends.async_client import make_request
 
 # Логгер для модуля
 logger = logging.getLogger(__name__)
@@ -90,7 +94,8 @@ async def create_token(
 
 @v1_auth_router.get(path="/google/callback")
 async def auth_google(
-        request: Request
+        request: Request,
+        client: Annotated[AsyncClient, Depends(make_request)]
 ):
     try:
         token = await oauth.google.authorize_access_token(request)
@@ -106,7 +111,9 @@ async def auth_google(
                 status_code=401,
                 detail="Google authentication failed."
             )
-
+        user_google_json = await _get_user_info_from_google_token(
+            access_token=token["access_token"], client=client
+        )
 
     except OAuthError:
         raise HTTPException(

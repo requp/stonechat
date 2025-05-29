@@ -51,7 +51,7 @@ class Settings(BaseSettings):
 
 
     model_config = SettingsConfigDict(
-        env_file=f"{pathlib.Path(__file__).resolve().parent.parent}/.env",
+        env_file=f"{pathlib.Path(__file__).resolve().parent.parent.parent}/.env",
         extra="allow"
     )
 
