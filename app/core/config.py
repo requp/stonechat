@@ -70,7 +70,7 @@ oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     authorize_state=settings.SECRET_KEY,
-    redirect_uri="http://requp.ru:8000/api/v1/auth",
+    redirect_uri=f"{settings.PROD_URL}/api/v1/auth",
     jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
     client_kwargs={"scope": "openid email profile"},
 )

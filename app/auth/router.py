@@ -8,29 +8,22 @@ from fastapi import (
     HTTPException,
     status,
     APIRouter,
-    Request,
-    Depends
+    Request
 )
 from fastapi.params import Depends
 from httpx import AsyncClient
 from jose import jwt, JWTError
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import RedirectResponse
 
 
 from app.auth.service import _get_user_info_from_google_token
 from app.core.config import settings, oauth
 from app.depends.async_client import make_request
 from app.auth.schemas import TokenUserData, GoogleUserData
-from app.main import app
 from app.mixins.db_mixin import get_db
 from app.user.model import User
-from app.user.schema import CreateUser
 from app.user.service import (
-    UserManager, 
-    _user_data_from_google_user_data, 
-    _does_google_user_already_exist, 
+    UserManager,
     _get_user_or_none
 )
 

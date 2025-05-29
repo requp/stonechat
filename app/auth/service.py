@@ -1,10 +1,6 @@
 import logging
-from typing import Annotated
 
-from fastapi import Depends
 from httpx import AsyncClient
-
-from app.depends.async_client import make_request
 
 logger = logging.getLogger(__name__)
 
