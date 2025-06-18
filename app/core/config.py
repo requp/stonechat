@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str
     PROD_HOST: str
     PROD_PORT: int
+    FRONTEND_URL: str
 
     @property
     def DATABASE_URL_async(self) -> str:
@@ -48,6 +49,10 @@ class Settings(BaseSettings):
     @property
     def PROD_URL(self) -> str:
         return f"http://{self.PROD_HOST}:{self.PROD_PORT}"
+
+    @property
+    def FRONTEND_SIMPLE_GROUP_URL(self) -> str:
+        return f"{self.FRONTEND_URL}/chat/simple_group_chat"
 
 
     model_config = SettingsConfigDict(

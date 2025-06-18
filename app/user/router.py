@@ -5,7 +5,7 @@ from fastapi import APIRouter, status, Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
-from app.auth.router import get_current_user
+from app.auth.router import get_current_user_ws, get_current_user
 from app.user.service import UserManager
 from app.mixins.db_mixin import get_db
 

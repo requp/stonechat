@@ -4,10 +4,10 @@ from fastapi import HTTPException, status
 from app.auth.router import get_current_user_ws
 
 
-class TestGetCurrentUser:
+class TestGetCurrentUserWs:
 
     @pytest.mark.asyncio
-    async def test_get_current_user_positive(
+    async def test_get_current_user_ws_positive(
             self, user_1_token, user_1
     ):
         user_1_from_token = await get_current_user_ws(token=user_1_token)
@@ -15,7 +15,7 @@ class TestGetCurrentUser:
 
 
     @pytest.mark.asyncio
-    async def test_get_current_user_with_expired_token(
+    async def test_get_current_user_ws_with_expired_token(
             self, user_1_expired_token
     ):
         with pytest.raises(HTTPException) as exc_info:
@@ -26,7 +26,7 @@ class TestGetCurrentUser:
 
 
     @pytest.mark.asyncio
-    async def test_get_current_user_invalid_token(
+    async def test_get_current_user_ws_invalid_token(
             self, fake_token
     ):
         with pytest.raises(HTTPException) as exc_info:

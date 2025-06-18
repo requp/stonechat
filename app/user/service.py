@@ -77,14 +77,6 @@ class UserManager:
     async def create_user(
             db: AsyncSession, google_user_data: GoogleUserData
     ) -> User:
-        does_user_exist = await _does_google_user_already_exist(
-            db=db, email=google_user_data.email, google_id=google_user_data.id
-        )
-        if does_user_exist:
-            raise HTTPException(
-                detail="A user with given data already exists",
-                status_code=status.HTTP_406_NOT_ACCEPTABLE
-            )
         username: str = await _generate_username(db=db)
         user_data: CreateUser = _user_data_from_google_user_data(
             google_user_data=google_user_data, username=username
@@ -93,3 +85,17 @@ class UserManager:
         db.add(new_user)
         await db.commit()
         return new_user
+
+
+    @staticmethod
+    async def get_or_create_user(
+            db: AsyncSession, google_user_data: GoogleUserData
+    ):
+        user: User | None = await _get_user_or_none(
+            db=db, email=google_user_data.email, google_id=google_user_data.id
+        )
+        if not user:
+            user = await UserManager.create_user(
+                db=db, google_user_data=google_user_data
+            )
+        return user

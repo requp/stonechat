@@ -1,10 +1,11 @@
 import logging
 from http.client import HTTPException
+from typing import Annotated
 
-from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect, status
+from fastapi import APIRouter, WebSocket, WebSocketException, WebSocketDisconnect, status, Depends
 from websockets.exceptions import ConnectionClosed
 
-from app.auth.router import get_current_user
+from app.auth.router import get_current_user_ws, get_current_user
 from app.auth.schemas import TokenUserData
 from app.chat.schemas import ChatEventType, ChatEvent
 
@@ -61,7 +62,7 @@ async def _get_current_user_or_exception(websocket: WebSocket, token: str) -> To
         Closes the WebSocket connection with a policy violation code if authentication fails.
     """
     try:
-        return await get_current_user(token=token)
+        return await get_current_user_ws(token=token)
     except HTTPException:
         await websocket.close(
             code=status.WS_1008_POLICY_VIOLATION
