@@ -1,7 +1,7 @@
 import pytest
 from fastapi import status
 
-from app.auth.router import get_current_user
+from app.auth.router import get_current_user_ws
 from app.auth.schemas import TokenUserData
 
 
@@ -19,7 +19,7 @@ class TestAuthToken:
         assert set(json_data.keys()) == {"access_token"}
         assert json_data["access_token"]
 
-        user = await get_current_user(token=json_data["access_token"])
+        user = await get_current_user_ws(token=json_data["access_token"])
         assert isinstance(user, TokenUserData)
         assert user_1_data["username"] == user.username
         assert user_1_data["user_id"] == user.user_id
